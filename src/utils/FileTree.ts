@@ -5,17 +5,19 @@ interface ITreeNode {
     id: string
     label: string
     path:string
+    type: "file" | "folder"
     children?: ITreeNode[]
 }
 
 const createNode = async (parent: string, dir: string): Promise<ITreeNode> => {
     const dirPath = path.join(parent, dir);
     const isDir = (await fs.lstat(dirPath)).isDirectory();
-
+    console.log(dir, ": ", isDir);
     const node:ITreeNode = {
         id: dirPath,
         label: dir,
-        path: dirPath
+        path: dirPath,
+        type: isDir ? "folder" : "file"
     }
 
     if(!isDir) return node;
