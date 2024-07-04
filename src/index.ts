@@ -1,30 +1,32 @@
 import http from 'http'
 import express from "express";
-import { Server } from 'socket.io';
 import * as pty from 'node-pty'
+import router from './router';
+import io from './socket';
+import * as fs from 'fs';
+import { createRootDir } from './middleware';
+import cors from 'cors';
 
 const PORT = process.env.PORT ?? 8000;
+
+export const ROOT_PATH = process.env.INIT_CWD + '/root'
 
 const ptyProcess = pty.spawn('bash', [], {
     name: 'xterm-color',
     cols: 80,
     rows: 30,
-    cwd: process.env.INIT_CWD + '/root',
+    cwd: ROOT_PATH,
     env: process.env
 })
 
 const app = express()
 const server = http.createServer(app)
 
-const io = new Server({
-    cors: {
-        origin: '*'
-    }
-})
+app.use(cors())
 
-app.get('/', (req, res) => {
-    res.send({msg: "Hello, Devil!"}).status(200)
-})
+app.use(createRootDir)
+
+app.use('/', router)
 
 io.attach(server);
 
