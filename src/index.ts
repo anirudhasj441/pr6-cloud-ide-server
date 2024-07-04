@@ -6,6 +6,7 @@ import io from './socket';
 import * as fs from 'fs';
 import { createRootDir } from './middleware';
 import cors from 'cors';
+import * as chokidar from 'chokidar';
 
 const PORT = process.env.PORT ?? 8000;
 
@@ -32,6 +33,10 @@ io.attach(server);
 
 ptyProcess.onData((data: string) => {
     io.emit('terminal:data', data)
+})
+
+chokidar.watch(ROOT_PATH).on('all', (event, path) => {
+    io.emit('files:refresh');
 })
 
 io.on('connection', (socket) => {
