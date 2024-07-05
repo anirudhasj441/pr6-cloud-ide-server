@@ -12,7 +12,6 @@ interface ITreeNode {
 const createNode = async (parent: string, dir: string): Promise<ITreeNode> => {
     const dirPath = path.join(parent, dir);
     const isDir = (await fs.lstat(dirPath)).isDirectory();
-    console.log(dir, ": ", isDir);
     const node:ITreeNode = {
         id: dirPath,
         label: dir,

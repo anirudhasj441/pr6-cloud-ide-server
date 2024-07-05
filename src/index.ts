@@ -3,17 +3,18 @@ import express from "express";
 import * as pty from 'node-pty'
 import router from './router';
 import io from './socket';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { createRootDir } from './middleware';
 import cors from 'cors';
 import * as chokidar from 'chokidar';
+import stripAnsi from 'strip-ansi';
 
 const PORT = process.env.PORT ?? 8000;
 
 export const ROOT_PATH = process.env.INIT_CWD + '/root'
 
 const ptyProcess = pty.spawn('bash', [], {
-    name: 'xterm-color',
+    name: 'xterm-color', 
     cols: 80,
     rows: 30,
     cwd: ROOT_PATH,
@@ -46,6 +47,15 @@ io.on('connection', (socket) => {
     console.log("socket connected!!");
     socket.on('terminal:write', (data) => {
         ptyProcess.write(data);
+    })
+
+    socket.on("file:save", async(filePath: string, content: string) => {
+        await fs.writeFile(filePath, content)
+    })
+
+    socket.on("terminal:resize", (cols: number, rows: number) => {
+        ptyProcess.resize(cols, rows)
+
     })
 })
 
