@@ -7,7 +7,6 @@ import * as fs from 'fs/promises';
 import { createRootDir } from './middleware';
 import cors from 'cors';
 import * as chokidar from 'chokidar';
-import stripAnsi from 'strip-ansi';
 
 const PORT = process.env.PORT ?? 8000;
 
