@@ -1,13 +1,14 @@
 import { Request, Response } from "express"
 import generateFileTree from "../utils/FileTree"
 import * as fs from 'fs/promises'
+import { ROOT_PATH } from ".."
 
 export const index =  (req: Request, res: Response) => {
     res.send({msg: "Hello, World!"}).status(200)
 }
 
 export const listDir = async (req: Request, res: Response) => {
-    const rootDir = process.env.INIT_CWD + '/root';
+    const rootDir = ROOT_PATH
 
     const fileTree = await generateFileTree(rootDir);
 

@@ -1,10 +1,12 @@
 import * as fs from 'fs/promises'
 import * as path from  'path';
+import { ROOT_PATH } from '..';
 
 interface ITreeNode {
     id: string
     label: string
     path:string
+    relativePath: string
     type: "file" | "folder"
     children?: ITreeNode[]
 }
@@ -16,6 +18,7 @@ const createNode = async (parent: string, dir: string): Promise<ITreeNode> => {
         id: dirPath,
         label: dir,
         path: dirPath,
+        relativePath: dirPath.replace(ROOT_PATH + "/", '') ,
         type: isDir ? "folder" : "file"
     }
 
