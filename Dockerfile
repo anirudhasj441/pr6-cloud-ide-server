@@ -24,7 +24,8 @@ RUN apt update && apt install -qy \
     build-essential \
     python3 \
     python3-pip \
-    sudo
+    sudo \
+    vim
 
 # Create a new user and add to sudo group
 RUN useradd -m -s /bin/bash $USERNAME && \
